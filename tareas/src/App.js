@@ -4,19 +4,37 @@ import './App.css';
 
 import { todos } from './todos.json';
 
+import TodoForm from './components/TodoForm';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       todos
-    }
+    };
+    this.handleAddTodo = this.handleAddTodo.bind(this);
+
   }
+
+  handleAddTodo(todo) {
+    this.setState({
+      todos: [...this.state.todos, todo]
+    })
+  }
+
+  handleRemoveTodo(index) {
+    this.setState({
+      todos: this.state.todos.filter((e, i) => {
+        return i !== index
+      })
+    })
+  }
+
   render() {
    const todos = this.state.todos.map((todo, i) => {
       return (
       
-       <div className="col-md-4">
+       <div className="col-md-4" key={i}>
           <div className="card mt-4">
         <div className="card-header">
           <h3>{ todo.title }</h3>
@@ -27,6 +45,14 @@ class App extends Component {
         <div className="card-body">
             <p>{ todo.description }</p>
             <p>{todo.responsible}</p>
+        </div>
+        <div className="card-footer">
+          <button
+            className="btn btn-danger"
+            onClick={this.handleRemoveTodo.bind(this, i)}
+            >
+            Delete
+            </button>
         </div>
         </div>
        </div>
@@ -45,12 +71,22 @@ class App extends Component {
 
           </nav>
 
+          
+
          <div className="container">
            <div className="row mt-4">
-             {todos}
+           <div className="col-md-3">
+            <img src={logo} className="App-logo" alt="logo" />
+             <TodoForm onAddTodo={this.handleAddTodo}/>
+           </div>
+            <div className="col-md-9">
+              <div className="row">
+                {todos}
+              </div>
+            </div>
            </div>
          </div>
-          <img src={logo} className="App-logo" alt="logo" />
+          
          
       </div>
     );
